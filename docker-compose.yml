@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: csfloat_tracker
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env.example
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    command: npm run dev
+  frontend:
+    build: ./frontend
+    env_file:
+      - ./frontend/.env.example
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+    command: npm run dev -- --host
+
+volumes:
+  pgdata:
