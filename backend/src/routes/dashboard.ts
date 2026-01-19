@@ -50,7 +50,7 @@ router.get('/dashboard', requireAuth, async (req: AuthRequest, res) => {
 
   const holdings = holdingsResult.rows;
   const totals = holdings.reduce(
-    (acc, row) => {
+    (acc: { marketValue: number; costBasis: number; delta24h: number; delta7d: number }, row: any) => {
       const latest = row.latest_price_cents ?? 0;
       const cost = row.purchase_price_cents ?? 0;
       acc.marketValue += latest * row.quantity;
@@ -61,7 +61,6 @@ router.get('/dashboard', requireAuth, async (req: AuthRequest, res) => {
     },
     { marketValue: 0, costBasis: 0, delta24h: 0, delta7d: 0 }
   );
-
   const portfolios: Record<number, { id: number; name: string; holdings: number[] }> = {};
   for (const row of portfolioResult.rows) {
     if (!portfolios[row.id]) {
