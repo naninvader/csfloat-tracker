@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "migrate": "ts-node src/db/migrate.ts",
+    "migrate": "ts-node-esm src/db/migrate.ts",
     "test": "vitest run"
   },
   "dependencies": {
