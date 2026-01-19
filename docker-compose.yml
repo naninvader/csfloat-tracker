@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: cs2suite
+      POSTGRES_PASSWORD: cs2suite
+      POSTGRES_DB: cs2suite
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://cs2suite:cs2suite@db:5432/cs2suite
+      JWT_SECRET: local-dev-secret
+      CORS_ORIGIN: http://localhost:5173
+      CSFLOAT_API_KEY: ''
+      CSFLOAT_ENABLE_PRICE_LIST: 'true'
+    ports:
+      - '4000:4000'
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
